@@ -1,10 +1,11 @@
 {
-  "name": "template-npm-kiln",
+  "name": "staking-contract-key-checker",
   "version": "1.0.0",
-  "description": "A template for building, publishing and maintaining npm packages.",
+  "description": "Performs signature checks on deposited keys",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
+    "check-keys": "ts-node ./src/index.ts",
     "test": "ts-mocha tests/**/*.test.ts",
     "test:coverage": "nyc ts-mocha tests/**/*.test.ts",
     "lint": "eslint \"**/*.{ts,tsx}\"",
@@ -14,12 +15,19 @@
   "author": "Luca Georges Francois <luca.georges-francois@kiln.fi>",
   "license": "MIT",
   "dependencies": {
+    "@chainsafe/as-sha256": "0.2.4",
+    "@chainsafe/bls": "6.0.3",
+    "@chainsafe/lodestar-params": "0.31.0",
+    "@chainsafe/lodestar-types": "0.31.0",
     "@commitlint/cli": "^17.1.2",
     "@commitlint/config-conventional": "^17.1.0",
     "@semantic-release/changelog": "^6.0.1",
     "@semantic-release/git": "^10.0.1",
+    "ethers": "^5.7.1",
     "husky": "^8.0.1",
     "semantic-release": "^19.0.5",
+    "ts-dotenv": "^0.8.3",
+    "ts-node": "^10.9.1",
     "typescript": "^4.8.3"
   },
   "devDependencies": {
