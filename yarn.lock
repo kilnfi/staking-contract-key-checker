@@ -194,7 +194,12 @@
     "@babel/helper-validator-identifier" "^7.18.6"
     to-fast-properties "^2.0.0"
 
-"@chainsafe/as-sha256@0.2.4", "@chainsafe/as-sha256@^0.2.3", "@chainsafe/as-sha256@^0.2.4":
+"@chainsafe/as-sha256@0.3.1":
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@chainsafe/as-sha256/-/as-sha256-0.3.1.tgz#3639df0e1435cab03f4d9870cc3ac079e57a6fc9"
+  integrity sha512-hldFFYuf49ed7DAakWVXSJODuq3pzJEguD8tQ7h+sGkM18vja+OFoJI9krnGmgzyuZC2ETX0NOIcCTy31v2Mtg==
+
+"@chainsafe/as-sha256@^0.2.3", "@chainsafe/as-sha256@^0.2.4":
   version "0.2.4"
   resolved "https://registry.yarnpkg.com/@chainsafe/as-sha256/-/as-sha256-0.2.4.tgz#17e78d32c71c836160bb55fd79c3daad93d9abf0"
   integrity sha512-rYfIOaQm0OlFcHdJFUu5VyYOA1HVeQXxOivUsawBjd7WXc3lMQ0bXMfCgN50gPPLWT92G4ioZ0EZz8RnH+YT/g==
