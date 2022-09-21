@@ -15,7 +15,7 @@
   "author": "Luca Georges Francois <luca.georges-francois@kiln.fi>",
   "license": "MIT",
   "dependencies": {
-    "@chainsafe/as-sha256": "0.2.4",
+    "@chainsafe/as-sha256": "0.3.1",
     "@chainsafe/bls": "6.0.3",
     "@chainsafe/lodestar-params": "0.31.0",
     "@chainsafe/lodestar-types": "0.31.0",
