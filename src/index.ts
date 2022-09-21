@@ -45,6 +45,7 @@ const generateDepositDomain = (forkVersion: Buffer): Buffer => {
 
 const main = async () => {
     await initBls();
+    let hasInvalid = false;
     const network = process.argv[2];
     const provider = new ethers.providers.JsonRpcProvider(
         env.EXECUTION_LAYER_RPC
@@ -130,6 +131,7 @@ const main = async () => {
                 console.log(
                     `INVALIDKEY ERROR: operator ${idx} has invalid key at index ${keyIdx}`
                 );
+                hasInvalid = true;
             } else {
                 console.log(`key ${keyIdx} of operator ${idx} is valid`);
             }
@@ -138,6 +140,9 @@ const main = async () => {
             lastPublicKey !=
             '0x000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000'
         );
+    }
+    if (hasInvalid) {
+        process.exit(1);
     }
 };
 
