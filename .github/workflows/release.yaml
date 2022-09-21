@@ -1,0 +1,39 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - ".github/ISSUE_TEMPLATE"
+      - ".github/pull_request_template.md"
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build-and-publish:
+    name: "Builds and publish the package"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "Checks-out the repository"
+        uses: actions/checkout@v3
+
+      - name: "Configuring node version 16.x for ubuntu-latest"
+        uses: actions/setup-node@v1
+        with:
+          node-version: "16.x"
+
+      - name: "Install the package's dependencies"
+        run: yarn install
+
+      - name: "Run build command"
+        run: yarn run build
+
+#      - name: "Create a new release"
+#        run: yarn semantic-release
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+#          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

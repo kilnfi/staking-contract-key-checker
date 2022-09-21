@@ -1,0 +1,96 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - ".github/ISSUE_TEMPLATE"
+      - ".github/pull_request_template.md"
+      - "README.md"
+
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - ".github/ISSUE_TEMPLATE"
+      - ".github/pull_request_template.md"
+      - "README.md"
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  lint:
+    name: "Verify code's style"
+    strategy:
+      matrix:
+        os: [ ubuntu-latest ]
+        node-version: [ 14.x, 16.x, 18.x ]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: "Checks-out the repository"
+        uses: actions/checkout@v3
+
+      - name: "Configuring node version ${{ matrix.node-version }} for ${{ matrix.os }}"
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: "Install the package's dependencies"
+        run: yarn install
+
+      - name: "Runs the linter"
+        run: yarn run lint
+
+  tests:
+    needs: lint
+
+    name: "Test the package"
+    strategy:
+      matrix:
+        os: [ ubuntu-latest ]
+        node-version: [ 14.x, 16.x, 18.x ]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: "Checks-out the repository"
+        uses: actions/checkout@v3
+
+      - name: "Configuring node version ${{ matrix.node-version }} for ${{ matrix.os }}"
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: "Install the package's dependencies"
+        run: yarn install
+
+      - name: "Executes the tests"
+        run: yarn run test
+
+  build:
+    needs: tests
+
+    name: "Build the package"
+    strategy:
+      matrix:
+        os: [ ubuntu-latest ]
+        node-version: [ 14.x, 16.x, 18.x ]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: "Checks-out the repository"
+        uses: actions/checkout@v3
+
+      - name: "Configuring node version ${{ matrix.node-version }} for ${{ matrix.os }}"
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: "Install the package's dependencies"
+        run: yarn install
+
+      - name: "Run build command"
+        run: yarn run build
