@@ -21,6 +21,7 @@ const GENESIS_VALIDATOR_ROOT = Buffer.from('00'.repeat(32), 'hex');
 const env = load({
     EXECUTION_LAYER_RPC: String,
     STAKING_CONTRACT_ADDRESS: String,
+    NETWORK: String,
 });
 
 const initBls = async (): Promise<void> => {
@@ -46,7 +47,7 @@ const generateDepositDomain = (forkVersion: Buffer): Buffer => {
 const main = async () => {
     await initBls();
     let hasInvalid = false;
-    const network = process.argv[2];
+    const network = env.NETWORK;
     const provider = new ethers.providers.JsonRpcProvider(
         env.EXECUTION_LAYER_RPC
     );
