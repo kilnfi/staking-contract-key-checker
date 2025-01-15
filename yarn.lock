@@ -231,7 +231,12 @@
     bls-eth-wasm "^0.4.8"
     randombytes "^2.1.0"
 
-"@chainsafe/lodestar-params@0.31.0", "@chainsafe/lodestar-params@^0.31.0":
+"@chainsafe/lodestar-params@0.39.0":
+  version "0.39.0"
+  resolved "https://registry.yarnpkg.com/@chainsafe/lodestar-params/-/lodestar-params-0.39.0.tgz#24baa1ead18f2463c1372a5cb29dbea960fd6456"
+  integrity sha512-VzgTFkKSGpfnVSlQr8ueiwwcTIRn0LPE1hCr8KE4h3AHBWXQpomLgqjU8CKZZnDGfhsUv4cMbXIfD54HCuGPoA==
+
+"@chainsafe/lodestar-params@^0.31.0":
   version "0.31.0"
   resolved "https://registry.yarnpkg.com/@chainsafe/lodestar-params/-/lodestar-params-0.31.0.tgz#fbce7d33ac6c448796208c8f4da1f3073680af99"
   integrity sha512-fZOYLj2W6YERWIAWwlV9q/7xGjms4P5G40ASnsxdRgePaa/7n60QG6EgUioHb29syL16zJ1Gh4/djYVJUyEI9Q==
