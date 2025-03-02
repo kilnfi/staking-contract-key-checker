@@ -202,6 +202,11 @@
     "@assemblyscript/loader" "^0.9.2"
     buffer "^5.4.3"
 
+"@chainsafe/as-sha256@^0.3.1":
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@chainsafe/as-sha256/-/as-sha256-0.3.1.tgz#3639df0e1435cab03f4d9870cc3ac079e57a6fc9"
+  integrity sha512-hldFFYuf49ed7DAakWVXSJODuq3pzJEguD8tQ7h+sGkM18vja+OFoJI9krnGmgzyuZC2ETX0NOIcCTy31v2Mtg==
+
 "@chainsafe/bls-hd-key@^0.2.0":
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/@chainsafe/bls-hd-key/-/bls-hd-key-0.2.1.tgz#3387a63f36f3cac20276bef40bb16a46294e6724"
@@ -231,7 +236,7 @@
     bls-eth-wasm "^0.4.8"
     randombytes "^2.1.0"
 
-"@chainsafe/lodestar-params@0.31.0", "@chainsafe/lodestar-params@^0.31.0":
+"@chainsafe/lodestar-params@0.31.0":
   version "0.31.0"
   resolved "https://registry.yarnpkg.com/@chainsafe/lodestar-params/-/lodestar-params-0.31.0.tgz#fbce7d33ac6c448796208c8f4da1f3073680af99"
   integrity sha512-fZOYLj2W6YERWIAWwlV9q/7xGjms4P5G40ASnsxdRgePaa/7n60QG6EgUioHb29syL16zJ1Gh4/djYVJUyEI9Q==
@@ -239,13 +244,18 @@
     "@chainsafe/ssz" "^0.8.17"
     js-yaml "^4.1.0"
 
-"@chainsafe/lodestar-types@0.31.0":
-  version "0.31.0"
-  resolved "https://registry.yarnpkg.com/@chainsafe/lodestar-types/-/lodestar-types-0.31.0.tgz#4ef6619070b75f11b90b45cad2bb0d3ef95f463f"
-  integrity sha512-uu1f66g95lPaoFWxmvNbupqESZkPR1xDOegAVXRszQqjH2mParQzXtXT631jhWAeKxfbCm4UKRKxbVSe0gnnKQ==
+"@chainsafe/lodestar-params@^0.39.0":
+  version "0.39.0"
+  resolved "https://registry.yarnpkg.com/@chainsafe/lodestar-params/-/lodestar-params-0.39.0.tgz#24baa1ead18f2463c1372a5cb29dbea960fd6456"
+  integrity sha512-VzgTFkKSGpfnVSlQr8ueiwwcTIRn0LPE1hCr8KE4h3AHBWXQpomLgqjU8CKZZnDGfhsUv4cMbXIfD54HCuGPoA==
+
+"@chainsafe/lodestar-types@0.39.0":
+  version "0.39.0"
+  resolved "https://registry.yarnpkg.com/@chainsafe/lodestar-types/-/lodestar-types-0.39.0.tgz#52732027c71fb046381fe1cbd1e12b096bec2c73"
+  integrity sha512-NK07Qwccg6lrknp8QGQp/FX8KyMhFEWmFzWrXLgtqcFTA6k+wcEPUfvVv0ZftaDkzEeUpLhYgIhwC1jp+z6PrA==
   dependencies:
-    "@chainsafe/lodestar-params" "^0.31.0"
-    "@chainsafe/ssz" "^0.8.17"
+    "@chainsafe/lodestar-params" "^0.39.0"
+    "@chainsafe/ssz" "^0.9.2"
 
 "@chainsafe/persistent-merkle-tree@^0.3.7":
   version "0.3.7"
@@ -254,6 +264,13 @@
   dependencies:
     "@chainsafe/as-sha256" "^0.2.3"
 
+"@chainsafe/persistent-merkle-tree@^0.4.2":
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/@chainsafe/persistent-merkle-tree/-/persistent-merkle-tree-0.4.2.tgz#4c9ee80cc57cd3be7208d98c40014ad38f36f7ff"
+  integrity sha512-lLO3ihKPngXLTus/L7WHKaw9PnNJWizlOF1H9NNzHP6Xvh82vzg9F2bzkXhYIFshMZ2gTCEz8tq6STe7r5NDfQ==
+  dependencies:
+    "@chainsafe/as-sha256" "^0.3.1"
+
 "@chainsafe/ssz@^0.8.17":
   version "0.8.20"
   resolved "https://registry.yarnpkg.com/@chainsafe/ssz/-/ssz-0.8.20.tgz#2c8e70e173a2540c8e4e0bad7c44fd836b8b256b"
@@ -261,6 +278,15 @@
   dependencies:
     "@chainsafe/as-sha256" "^0.2.4"
     "@chainsafe/persistent-merkle-tree" "^0.3.7"
+    case "^1.6.3"
+
+"@chainsafe/ssz@^0.9.2":
+  version "0.9.2"
+  resolved "https://registry.yarnpkg.com/@chainsafe/ssz/-/ssz-0.9.2.tgz#6f2552db312217b911e34bcdef9057f8a3a108f2"
+  integrity sha512-r3bKiGMF7EZlsgXTyyzQbS+GJTj6MvTlY3Ms1byFZLL1H9Maht8muE2LkF3pS1zU9KY4tiJeQd+KABdhyfB9Ag==
+  dependencies:
+    "@chainsafe/as-sha256" "^0.3.1"
+    "@chainsafe/persistent-merkle-tree" "^0.4.2"
     case "^1.6.3"
 
 "@colors/colors@1.5.0":
