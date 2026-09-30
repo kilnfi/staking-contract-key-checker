@@ -16,7 +16,17 @@ const FORK_VERSIONS: { [key: string]: Buffer } = {
     prater: Buffer.from('00001020', 'hex'),
     pyrmont: Buffer.from('00002009', 'hex'),
 };
+
+// Target EVM execution layer chain IDs
+const EXPECTED_CHAIN_IDS: { [key: string]: number } = {
+    mainnet: 1,
+    prater: 5,
+    pyrmont: 5,
+};
+
 const GENESIS_VALIDATOR_ROOT = Buffer.from('00'.repeat(32), 'hex');
+const ZERO_ADDRESS = ethers.constants.AddressZero;
+const ZERO_PUBLIC_KEY = '0x' + '00'.repeat(48);
 
 const env = load({
     EXECUTION_LAYER_RPC: String,
@@ -48,11 +58,42 @@ const main = async () => {
     await initBls();
     let hasInvalid = false;
     const network = env.NETWORK;
+
+    // Fail fast on a misconfigured NETWORK fork version
+    const forkVersion: Buffer = FORK_VERSIONS[network];
+    const expectedChainId = EXPECTED_CHAIN_IDS[network];
+
+    if (!forkVersion || !expectedChainId) {
+        throw new Error(
+            `Unsupported NETWORK "${network}". Expected one of: ${Object.keys(
+                FORK_VERSIONS
+            ).join(', ')}`
+        );
+    }
+
     const provider = new ethers.providers.JsonRpcProvider(
         env.EXECUTION_LAYER_RPC
     );
+
+    // H-6 Remediation: Validate network chain ID against expected execution chain
+    let detectedNetwork: ethers.providers.Network;
+    try {
+        detectedNetwork = await provider.getNetwork();
+    } catch (err: any) {
+        throw new Error(
+            `Failed to connect to execution layer RPC at ${env.EXECUTION_LAYER_RPC}: ${err.message}`
+        );
+    }
+
+    if (detectedNetwork.chainId !== expectedChainId) {
+        throw new Error(
+            `NETWORK MISMATCH ERROR: RPC node answered with chainId ${detectedNetwork.chainId} (${detectedNetwork.name}), but configured network is '${network}' (expected chainId ${expectedChainId}). Aborting to prevent invalid verification.`
+        );
+    }
+
     const bn = await provider.getBlockNumber();
-    console.log('Running key analysis at block', bn);
+    console.log(`Connected to ${detectedNetwork.name} (chainId ${detectedNetwork.chainId})`);
+    console.log(`Running key analysis at block ${bn}`);
 
     const StakingContract = new ethers.Contract(
         env.STAKING_CONTRACT_ADDRESS,
@@ -61,7 +102,6 @@ const main = async () => {
     );
 
     const operators = [];
-
     let lastOperator = null;
     let operatorIndex = 0;
 
@@ -69,17 +109,18 @@ const main = async () => {
         if (lastOperator !== null) {
             operators.push(lastOperator);
         }
-        lastOperator = await StakingContract.getOperator(operatorIndex);
+        // Pin call to current block number to ensure state consistency
+        lastOperator = await StakingContract.getOperator(operatorIndex, {
+            blockTag: bn,
+        });
         ++operatorIndex;
-    } while (
-        lastOperator.operatorAddress !==
-        '0x0000000000000000000000000000000000000000'
-    );
+    } while (lastOperator.operatorAddress !== ZERO_ADDRESS);
 
     for (let idx = 0; idx < operators.length; ++idx) {
         const operator = operators[idx];
         let keyIdx = operator.funded.toNumber();
         let lastPublicKey = null;
+
         console.log();
         console.log(
             `starting key verification for operator ${idx} ${operator.operatorAddress}`
@@ -88,6 +129,7 @@ const main = async () => {
         console.log(`funded=${operator.funded.toNumber()}`);
         console.log(`available=${operator.available.toNumber()}`);
         console.log();
+
         do {
             let key;
             try {
@@ -96,29 +138,32 @@ const main = async () => {
                 });
             } catch (e: any) {
                 if (e.errorName === 'Panic') {
-                    lastPublicKey =
-                        '0x000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000';
+                    lastPublicKey = ZERO_PUBLIC_KEY;
                     continue;
                 } else {
                     throw e;
                 }
             }
+
             lastPublicKey = key.publicKey;
             const withdrawalAddress = await StakingContract.getCLFeeRecipient(
-                key.publicKey
+                key.publicKey,
+                { blockTag: bn }
             );
+
             const withdrawalCredentials = Buffer.from(
                 `010000000000000000000000` + withdrawalAddress.slice(2),
                 'hex'
             );
             const publicKey = Buffer.from(key.publicKey.slice(2), 'hex');
             const signature = Buffer.from(key.signature.slice(2), 'hex');
+
             const depositMessage: DepositMessage = {
                 pubkey: publicKey,
                 withdrawalCredentials: withdrawalCredentials,
                 amount: 32000000000,
             };
-            const forkVersion: Buffer = FORK_VERSIONS[network];
+
             const depositDomain = generateDepositDomain(forkVersion);
             const signingData: SigningData = {
                 objectRoot:
@@ -127,6 +172,7 @@ const main = async () => {
             };
             const signingDataRoot =
                 ssz.phase0.SigningData.hashTreeRoot(signingData);
+
             const valid = verify(publicKey, signingDataRoot, signature);
             if (!valid) {
                 console.log(
@@ -137,14 +183,16 @@ const main = async () => {
                 console.log(`key ${keyIdx} of operator ${idx} is valid`);
             }
             ++keyIdx;
-        } while (
-            lastPublicKey !=
-            '0x000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000'
-        );
+        } while (lastPublicKey !== ZERO_PUBLIC_KEY);
     }
+
     if (hasInvalid) {
         process.exit(1);
     }
 };
 
-main();
+// Surface startup/runtime failures explicitly
+main().catch((error) => {
+    console.error('Key verification failed:', error.message || error);
+    process.exit(1);
+});
